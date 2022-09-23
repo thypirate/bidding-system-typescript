@@ -1,54 +1,89 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+import { useNavigate } from 'react-router-dom';
+import { Product } from '../interfaces';
+import {
+  CircularProgress, Button, VStack, Center, Flex, Spacer, Container, Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+} from '@chakra-ui/react'
 
 const Products = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchProducts = () => {
+      fetch('http://localhost:4000/api')
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.products);
+          setLoading(false);
+        });
+    };
+    fetchProducts();
+  }, []);
+
+  const handleBidBtn = (product: Product) =>
+    navigate(`/products/bid/${product.name}/${product.price}`);
+
   return (
     <>
-      <Container>
-        <div className="d-grid gap-2">
-          <Button variant="primary" size="lg">
+      <VStack
+
+        spacing={4}
+        align='stretch'
+      >
+        <Flex mt={10}>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Price</Th>
+                <Th>Last Bidder</Th>
+                <Th>Creator</Th>
+                <Th>Edit</Th>
+              </Tr>
+            </Thead>
+            {/* Data for display, we will later get it from the server */}
+            <Tbody>
+              {loading ? (
+                <CircularProgress isIndeterminate color='green.300' />
+
+              ) : products.map((product: Product) => {
+
+                return (
+
+                  <Tr key={product.id}>
+                    <Td>{product.name}</Td>
+                    <Td>{product.price}</Td>
+                    <Td>{product.last_bidder}</Td>
+                    <Td>{product.owner}</Td>
+                    <Td>
+                      <Button colorScheme='green' onClick={() => handleBidBtn(product)}>Edit</Button>
+                    </Td>
+                  </Tr>)
+
+              })}
+            </Tbody>
+          </Table>
+        </Flex>
+        <Flex justifyContent="center" mt={10}>
+          <Button colorScheme='blue'>
             <Link to="/products/add" >
-              ADD PRODUCTS
+              Add Products
             </Link>
           </Button>
-        </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Last Bidder</th>
-              <th>Creator</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          {/* Data for display, we will later get it from the server */}
-          <tbody>
-            <tr>
-              <td>Tesla Model S</td>
-              <td>$30,000</td>
-              <td>@david_show</td>
-              <td>@elon_musk</td>
-              <td>
-                <button>Edit</button>
-              </td>
-            </tr>
+        </Flex>
+      </VStack>
 
-            <tr>
-              <td>Ferrari 2021</td>
-              <td>$50,000</td>
-              <td>@bryan_scofield</td>
-              <td>@david_asaolu</td>
-              <td>
-                <button>Edit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Container>
     </>
   )
 }

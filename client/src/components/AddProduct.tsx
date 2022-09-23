@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Socket } from 'socket.io-client'
-import { ClientToServerEvents, ServerToClientEvents } from '../interfaces'
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { ClientToServerEvents } from '../interfaces'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Container,
+  Flex,
+  Box,
+  Button,
+  FormHelperText,
+  Input
+} from '@chakra-ui/react'
 
 type AddProductProps = {
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents>
 }
-
 
 const AddProduct = ({ socket }: AddProductProps) => {
   const [name, setName] = useState<string>('');
@@ -20,34 +25,36 @@ const AddProduct = ({ socket }: AddProductProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ name, price, owner: localStorage.getItem('userName') });
+    //console.log({ name, price, owner: localStorage.getItem('userName') });
+    socket.emit('addProduct', {
+      name,
+      price,
+      owner: localStorage.getItem('userName')!.toString(),
+    });
     navigate('/products');
   };
   return (
     <>
-      <Container>
-        <h2>Add a new product</h2>
-        <Form className="addProduct__form" onSubmit={handleSubmit}>
-          <label htmlFor="name">Name of the product</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
 
-          <label htmlFor="price">Starting price</label>
-          <input
-            type="number"
-            name="price"
-            value={price}
-            onChange={(e) => setPrice(parseInt(e.target.value))}
-            required
-          />
-
-          <button className="addProduct__cta">SEND</button>
-        </Form>
+      <Container mt="10">
+        <Box mb={10} fontSize={28} >Add Product</Box>
+        <form onSubmit={handleSubmit}>
+          <FormControl>
+            <FormLabel>Name of the product</FormLabel>
+            <Input onChange={(e) => setName(e.target.value)} />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Starting price</FormLabel>
+            <Input type="number" onChange={(e) => setPrice(parseInt(e.target.value))} />
+          </FormControl>
+          <Button
+            mt={4}
+            colorScheme='teal'
+            type='submit'
+          >
+            Submit
+          </Button>
+        </form>
       </Container>
     </>
   )

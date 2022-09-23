@@ -1,43 +1,75 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Socket } from 'socket.io-client'
-import { ClientToServerEvents, ServerToClientEvents } from '../interfaces'
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom'
+import {
+  Box,
+  Flex,
+  Avatar,
+  HStack,
+  Link,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Stack,
+} from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
+import { ClientToServerEvents } from '../interfaces'
+import { Link as ReachLink } from 'react-router-dom'
 
 
 type NavProps = {
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents>
 }
+
+const Links = ['home', 'products'];
+
+const NavLink = ({ children, to }: { children: ReactNode, to: string }) => (
+  <Link
+    px={2}
+    py={1}
+    rounded={'md'}
+    _hover={{
+      textDecoration: 'none',
+      bg: useColorModeValue('gray.200', 'gray.700'),
+    }}
+    as={ReachLink} to={to}>
+    {children}
+  </Link>
+);
+
 const NavComponent = ({ socket }: NavProps) => {
-  return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link>
-                <Link to="/" >
-                  Home
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/products" >
-                  Products
-                </Link>
-              </Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
-  )
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (<>
+    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <IconButton
+          size={'md'}
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          aria-label={'Open Menu'}
+          display={{ md: 'none' }}
+          onClick={isOpen ? onClose : onOpen}
+        />
+        <HStack spacing={8} alignItems={'center'}>
+          <Box>bidding-system</Box>
+          <HStack
+            as={'nav'}
+            spacing={4}
+            display={{ base: 'none', md: 'flex' }}>
+            {Links.map((link) => (
+              <NavLink key={link} to={link}>{link}</NavLink>
+            ))}
+          </HStack>
+        </HStack>
+      </Flex>
+
+    </Box>
+  </>
+  );
 }
 
 export default NavComponent;

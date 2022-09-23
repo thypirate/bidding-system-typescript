@@ -1,17 +1,13 @@
+export interface ClientToServerEvents {
+  addProduct: (Product: Product) => void;
+  bidProduct: (Product: Product) => void;
+}
 
-export interface ServerToClientEvents {
-    noArg: () => void;
-  }
-  
-  export interface ClientToServerEvents {
-    hello: () => void;
-  }
-  
-  export interface InterServerEvents {
-    ping: () => void;
-  }
-  
-  export interface SocketData {
-    name: string;
-    age: number;
-  }
+export interface Product {
+  id?: number;
+  userInput?: string;
+  name: string | undefined;
+  price?: number;
+  owner?: string;
+  last_bidder?: string;
+}
