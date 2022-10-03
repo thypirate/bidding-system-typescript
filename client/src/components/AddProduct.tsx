@@ -5,12 +5,9 @@ import { ClientToServerEvents } from '../interfaces'
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Container,
-  Flex,
   Box,
   Button,
-  FormHelperText,
   Input
 } from '@chakra-ui/react'
 
@@ -25,7 +22,6 @@ const AddProduct = ({ socket }: AddProductProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //console.log({ name, price, owner: localStorage.getItem('userName') });
     socket.emit('addProduct', {
       name,
       price,

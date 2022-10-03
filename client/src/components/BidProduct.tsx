@@ -23,7 +23,6 @@ const BidProduct = ({ socket }: BidProductProps) => {
   const { name, price } = useParams();
   //sets the default value as the current price from the Product page
   const [userInput, setUserInput] = useState<string>(price as string);
-
   //Destructured from the URL
   const navigate = useNavigate();
   const [error, setError] = useState(false);
@@ -32,7 +31,7 @@ const BidProduct = ({ socket }: BidProductProps) => {
     e.preventDefault();
     if (Number(userInput) > Number(price)) {
       socket.emit('bidProduct', {
-        userInput,
+        price: Number(userInput),
         last_bidder: localStorage.getItem('userName')!.toString(),
         name
       });
@@ -55,7 +54,7 @@ const BidProduct = ({ socket }: BidProductProps) => {
                 The bidding amount must be greater than {price}
               </p>
             )}
-            <Input onChange={(e) => setUserInput(e.target.value)} required />
+            <Input onChange={(e) => setUserInput(e.target.value)} placeholder={price} required />
           </FormControl>
           <Button
             mt={4}

@@ -7,7 +7,7 @@ import AddProduct from './components/AddProduct';
 import BidProduct from './components/BidProduct'
 import { ChakraProvider } from '@chakra-ui/react'
 
-const socket = io('http://localhost:4000');
+const socket = io('http://localhost:4000', { transports: ['websocket'] });
 
 const App = () => {
   return (

@@ -38,18 +38,20 @@ socketIO.on('connection', (socket: Socket) => {
     fs.writeFile('data.json', stringData, (err) => {
       console.error(err);
     });
-    console.log(data); //logs the message from the client
+    //Sends back the data after adding a new product
+    socket.emit('addResponse', data);
   });
 
   //Listens for new bids from the client
   socket.on('bidProduct', (data) => {
-    //console.log(data);
     findProduct(
       data.name,
       productData['products'],
       data.last_bidder,
-      data.amount
+      data.price
     );
+    //Sends back the data after placing a bid
+    socket.emit('bidResponse', data);
   });
 
 });

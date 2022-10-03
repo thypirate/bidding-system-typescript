@@ -1,24 +1,17 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { Socket } from 'socket.io-client'
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Link,
   IconButton,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
+  useToast,
   useDisclosure,
   useColorModeValue,
-  Stack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import { ClientToServerEvents } from '../interfaces'
+import { ClientToServerEvents, Product } from '../interfaces'
 import { Link as ReachLink } from 'react-router-dom'
 
 
@@ -29,6 +22,7 @@ type NavProps = {
 const Links = ['home', 'products'];
 
 const NavLink = ({ children, to }: { children: ReactNode, to: string }) => (
+
   <Link
     px={2}
     py={1}
@@ -42,7 +36,44 @@ const NavLink = ({ children, to }: { children: ReactNode, to: string }) => (
   </Link>
 );
 
+
+
 const NavComponent = ({ socket }: NavProps) => {
+  const toast = useToast()
+  useEffect(() => {
+    socket.on('addResponse', (data: Product) => {
+      console.log(data)
+      toast({
+        title: 'New product added.',
+        description: `@${data.owner} added ${data.name} price $${Number(
+          data.price
+        ).toLocaleString()}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    });
+
+
+  }, [socket])
+
+  useEffect(() => {
+    socket.on('bidResponse', (data: Product) => {
+      toast({
+        title: 'New bidd.',
+        description: `@${data.last_bidder} just bidded  $${Number(
+          data.price
+        ).toLocaleString()} on ${data.name}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    });
+
+
+  }, [socket])
+
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (<>
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>

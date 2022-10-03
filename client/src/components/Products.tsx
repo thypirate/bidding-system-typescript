@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../interfaces';
 import {
-  CircularProgress, Button, VStack, Center, Flex, Spacer, Container, Table,
+  CircularProgress,
+  Button,
+  VStack,
+  Center,
+  Flex,
+  Spacer,
+  Container,
+  Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -36,7 +42,6 @@ const Products = () => {
   return (
     <>
       <VStack
-
         spacing={4}
         align='stretch'
       >
@@ -59,7 +64,6 @@ const Products = () => {
               ) : products.map((product: Product) => {
 
                 return (
-
                   <Tr key={product.id}>
                     <Td>{product.name}</Td>
                     <Td>{product.price}</Td>
@@ -69,7 +73,6 @@ const Products = () => {
                       <Button colorScheme='green' onClick={() => handleBidBtn(product)}>Edit</Button>
                     </Td>
                   </Tr>)
-
               })}
             </Tbody>
           </Table>

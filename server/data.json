@@ -17,14 +17,15 @@
     {
       "id": 3,
       "name": "Ferrari F560",
-      "price": "100000",
+      "price": 1100000000,
       "owner": "samson35",
-      "last_bidder": "admiralty20"
+      "last_bidder": "Thy"
     },
     {
-      "name": "Carne",
-      "price": 1234,
-      "owner": "Thy"
+      "name": "Apple",
+      "price": 6,
+      "owner": "John",
+      "last_bidder": "John"
     }
   ]
 }
